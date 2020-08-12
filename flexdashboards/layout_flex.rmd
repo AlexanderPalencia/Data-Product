@@ -1,0 +1,117 @@
+---
+title: "Clase: Flex Dashboards"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r librerias}
+library(flexdashboard)
+library(readr)
+library(dplyr)
+library(DT)
+```
+
+```{r carga archivo}
+pokemon <- read.csv("pokemon.csv")
+```
+# KPIS {data-icon="fa-paw"}
+
+##
+###
+
+```{r}
+valueBox(nrow(pokemon), 
+         caption = "total de pokemonns",
+         icon = 'fa-paw')
+```
+
+###
+```{r}
+valueBox(sum(pokemon$is_legendary), 
+         caption = "total de legendarios",
+         icon = 'fa-crown')
+```
+
+###
+```{r}
+valueBox(round(mean(pokemon$height_m, na.rm = TRUE),2), 
+         caption = "promedio altura",
+         icon = 'fa-text-height', color = "warning")
+```
+
+
+# Pokemon Data
+
+##
+###
+```{r head pokemon}
+DT::datatable(pokemon)
+```
+
+## {.tabset}
+### Fire
+
+```{r}
+pokemons_fire <-
+  pokemon %>%
+  filter(type1 == 'fire') %>%
+  select(name, japanese_name, generation, is_legendary)
+
+DT::datatable(pokemons_fire)
+```
+
+### tab 2
+### tab 3
+
+# layout example
+
+## {data-height=200}
+
+### Columna 1 {data-width=4; data-padding=30}
+https://fontawesome.com/
+Contiene los elementos de nuestro dashboard
+el width total de la pantalla es 12
+padding -- el espacio entre los dashboards
+esto renderiza con boostrap
+por lo que se puede poner caracteristicas de css.
+
+"# --> layout
+## --> Fila
+### --> Columna
+"
+
+
+### Columna 2 {data-width=8}
+
+##
+
+### Columna 3
+
+### Columna 4
+
+### Columna 5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

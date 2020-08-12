@@ -1,0 +1,201 @@
+---
+title: "Intro Markdown"
+author: "Alexander Palencia 20160391"
+date: "7/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Texto
+## Italicas y Negritas
+
+* La palabra **hola** está en negritas
+    * utilizamos `**hola**`
+* La palabra *mundo* está en cursiva
+  * Utilizamos `*mundo*` 
+  
+## Sub y Supra indices
+
+* La formula quimica del agua es H~2~O y la del carbonato de sodio Na~2~CO~3~
+  * H~2~O se logra poniendo: `H~2~O`
+  * Na~2~CO~3~ se logra poniendo: `Na~2~CO~3~`
+* También se puede incluir texto:
+  * Precio~dia~
+* Podemos crear exponentes: X^2^
+  * Eso se puede lograr asi: `X^2^`
+  
+## Inline Code
+
+* Para asignar variables en R es `x <- y+1`
+* Para que lo ejecute hacemos: `r (x<-5+2)`
+* El valor en la variable es `r x`
+
+## Hipervinculos
+
+* Para crear un link: `[Texto](url)`
+  * Ejemplo: [Academatica](https://www.youtube.com/academatica)
+  
+  
+## Imagenes
+
+* Para agrgar imagenes: `![caption](URL/Direccion)`
+  * Ejemplo: ![test](mr.png)
+  
+## Imagenes con referencia
+  
+![Civic SI ^[Imagen descargada de algun lado]](mr.png)
+
+## Encabezados y Sub encabezados
+
+* `# Heading 1`
+* `## Heading 2`
+* `### Heading 3`
+
+## Listas 
+
+````
++ item 1
+  + item 1.1
++ item 2
+  + item 2.1
+  + item 2.2
+````
+
++ item 1
+  + item 1.1
++ item 2
+  + item 2.1
+  + item 2.2
+
+## Listas ordenadas
+
+````
+1. Item 1
+  1. Item 1.1
+  2. Item 1.2
+2. Item 2
+  + Item 2.1
+````
+1. Item 1
+   1. Item 1.1
+   2. Item 1.2
+2. Item 2
+   + Item 2.1
+   
+## Quotes
+
+>“Keep away from people who try to belittle your ambitions. Small people always do that, but the really great make you feel that you, too, can become great.”
+>
+> --- Mark Twain
+
+## Plain Code Chunks
+
+````
+SELECT * 
+FROM table 
+  WHERE id > 100 
+  ORDER BY date 
+````
+
+## Expresiones Matematicas
+
+$\int_a^b e^{x^4}dx$
+
+## Centradas:
+
+$$\int_a^b e^{x^2}dx$$
+
+
+```
+$$X = \begin{bmatrix}1 & x_{1}\\
+1 & x_{2}\\
+1 & x_{3}
+\end{bmatrix}$$
+```
+$$X = \begin{bmatrix}1 & x_{1}\\
+1 & x_{2}\\
+1 & x_{3}
+\end{bmatrix}$$
+
+```
+$$\Theta = \begin{pmatrix}\alpha & \beta\\
+\gamma & \delta
+\end{pmatrix}$$
+```
+
+$$\Theta = \begin{pmatrix}\alpha & \beta\\
+\gamma & \delta
+\end{pmatrix}$$
+
+Todas las ecuaciones se escriben usando Latex. Es de mucha utilidad este generador de latex. 
+
+[Generador de Latex](https://www.codecogs.com/latex/eqneditor.php)
+
+
+### Python con r https://rstudio.github.io/reticulate/ ambiente en r y python.
+### Usar un dataset de python pandas y usarlo con r. Instancia en AWS mysqlexamples-instance-1.coclu0fxxexm.us-east-1.rds.amazonaws.com yQ2znv
+### Para conectarse a una base de datos se necesita instalar el driver Sde mySQL administrator de mySQL data https://db.rstudio.com/databases/my-sql/
+
+
+```{r dataset cars, echo=FALSE}
+mtcars
+```
+
+```{r warning=FALSE}
+library(dplyr)
+df <-
+mtcars %>%
+  group_by(carb) %>%
+  summarise(avg_mpg = mean(mpg))
+```
+
+```{r}
+plot(cars)
+```
+
+```{r warning=FALSE}
+library(ggplot2)
+diamonds %>%
+  ggplot(aes(carat, price, color=color))+
+  geom_point()
+```
+
+
+```{r}
+library(reticulate)
+use_condaenv("r-reticulate")
+```
+
+
+```{python}
+import pandas as pd
+
+#iris_pandas = pd.read_csv(iris.txt)
+#iris_pandas.head()
+
+```
+
+
+
+```{r}
+library(RMySQL)
+"
+dbcon <- dbConnect(MySQL(),
+                   host = 'mysqlexamples-instance-1.coclu0fxxexm.us-east-1.rds.amazonaws.com',
+                   user = 'ufm_student',
+                   password = 'yQ2znv',
+                   dbname = 'datasets')
+                   
+"
+```
+
+```
+{sql connection=dbcon}
+
+SELECT *
+FROM iris
+Limit 10;"
+```
