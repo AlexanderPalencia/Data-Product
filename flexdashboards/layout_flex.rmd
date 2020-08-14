@@ -1,5 +1,7 @@
 ---
 title: "Clase: Flex Dashboards"
+author: "Alexander Palencia 20160391"
+date: "8/13/2020"
 output:
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -34,12 +36,46 @@ valueBox(sum(pokemon$is_legendary),
          icon = 'fa-crown')
 ```
 
+
+
 ###
 ```{r}
 valueBox(round(mean(pokemon$height_m, na.rm = TRUE),2), 
          caption = "promedio altura",
          icon = 'fa-text-height', color = "warning")
 ```
+
+
+##
+### electric pokemon average attack
+```{r}
+attack_metrics<-
+pokemon %>% 
+  group_by(type1) %>% 
+  summarise(avg_attack = mean(sp_attack,na.rm=TRUE) ) %>% 
+  mutate(avg_attack = round(avg_attack,0) )
+gauge(attack_metrics %>% 
+        filter(type1=="electric") %>% 
+        pull(avg_attack),min = min(pokemon$sp_attack),
+      max=max(pokemon$sp_attack),
+      symbol = " Att",
+      gaugeSectors(success=c(100,194),
+                                  warning = c(50,100),
+                                  danger =c(0,50) ))
+```
+
+### Water Pokemon average attack
+```{r}
+gauge(attack_metrics %>% 
+        filter(type1=="water") %>% 
+        pull(avg_attack),min = min(pokemon$sp_attack),
+      max=max(pokemon$sp_attack),
+      symbol = " Att",
+      gaugeSectors(success=c(100,194),
+                                  warning = c(50,100),
+                                  danger =c(0,50) ))
+```
+
 
 
 # Pokemon Data
@@ -92,13 +128,6 @@ por lo que se puede poner caracteristicas de css.
 ### Columna 4
 
 ### Columna 5
-
-
-
-
-
-
-
 
 
 

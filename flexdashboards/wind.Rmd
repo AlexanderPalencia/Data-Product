@@ -1,0 +1,85 @@
+---
+title: "FLEX DASHBOARDS HTML WIDGETS"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+
+```{r}
+library(flexdashboard)
+library(readr)
+library(dplyr)
+library(leaflet)
+library(crosstalk)
+library(DT)
+```
+
+```{r}
+earthquakedata <- read_csv("earthquakedata.csv")
+```
+
+# Leaflet
+##
+###
+
+```{r}
+earthquakedata %>% 
+  filter(yr == 1995) %>% 
+  DT::datatable()
+```
+
+
+###
+
+```{r}
+earthquakedata %>%
+  filter(yr == 1995) %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(lng = ~lon,
+             lat = ~lat,
+             label = ~yr)
+```
+
+# Crosstalk
+
+```{r}
+data_shared <- SharedData$new(earthquakedata %>%
+                                filter(yr==1995))
+```
+
+##
+
+### tabla
+```{r}
+filter_slider("mag", "Magnitud", data_shared, step = 0.1, width = 250,
+              column = ~mag)
+filter_select("yr", "Year", data_shared, group = ~yr, multiple = FALSE)
+```
+
+```{r}
+data_shared %>%
+  DT::datatable()
+```
+
+### mapa
+```{r}
+data_shared %>%
+  leaflet() %>% 
+  addTiles() %>% 
+  addMarkers(lng = ~lon, 
+             lat = ~lat, 
+             label = ~yr)
+```
+
+
+
+
+
+
+
+
+
+
