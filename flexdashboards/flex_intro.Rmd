@@ -1,0 +1,42 @@
+---
+title: "Clase: Flex Dashboards"
+output:
+  flexdashboard::flex_dashboard:
+    storyboard: true
+---
+```{r}
+library(dplyr)
+```
+
+
+### Iniciamos con esto
+  
+  ```{r}
+  plot(mtcars)
+```
+
+*** 
+  
+  Some commentary about Frame 1.
+
+### Luego esto
+
+```{r}
+plot(mtcars$cyl,mtcars$disp)
+```
+
+*** 
+  
+  Some commentary about Frame 2.
+  
+### Por ultimo esto
+
+```{r}
+mtcars %>% 
+  filter(cyl>4) %>% 
+  DT::datatable()
+```
+
+*** 
+  
+  Some commentary about Frame 3.
