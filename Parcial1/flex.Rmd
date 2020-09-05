@@ -1,0 +1,175 @@
+---
+title: "academatica"
+author: "Alexander Palencia & Juan Barillas"
+date: "9/1/2020"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r librerias}
+library(flexdashboard)
+library(readr)
+library(dplyr)
+library(DT)
+library(tidyverse, warn.conflicts = FALSE)
+library(lubridate, warn.conflicts = FALSE)
+library(plotly)
+library(ggplot2)
+```
+
+```{r carga archivo}
+stats <- read.csv('data/academatica_video_stats.csv')
+metadata <- read.csv('data/new_metadata.csv')
+videos <- read.csv('data/new_videos.csv')
+
+metadata <- metadata %>%
+  rename(id = video_id)
+union <- merge(stats, metadata, all = TRUE, by = "id") %>%
+  arrange(id)
+df = subset(videos, select = c(contentDetails.videoId, date)) %>%
+  rename(id = contentDetails.videoId) %>%
+  arrange(id)
+
+finalTable <- merge(union, df, all = TRUE, by = "id")
+finalTable <- na.omit(finalTable)
+
+videosYear <- year(ymd(finalTable$date))
+videosMonth <- month(ymd(finalTable$date))
+videosDay <- day(ymd(finalTable$date))
+
+finalTable$yearPublish <- videosYear
+finalTable$monthPublish <- videosMonth
+finalTable$dayPublish <- videosDay
+```
+
+# Academatica {data-icon="fa-graduation-cap"}
+
+### Introducción
+<div>
+<center>
+<h1>Academatica</h1>
+<img src="src/MainLogo.jpg">
+<br>
+<h5>
+<a href="https://www.youtube.com/user/chzelada">Follow Us</a>
+</h5>
+</center>
+<h3>
+En esta pagina podras encontrar el análisis realizado al canal de Youtube de Academatica sobre su data historica en la plataforma. Podrás encontrar cosas como los videos más vistos, los videos con más likes, una línea de tiempo de los videos subidos desde la creación del canal. También podras navegar hacia la pagina y poder ver tus vídeos que más te causen interes para continuar con tu aprendizaje.
+</h3>
+</div>  
+
+
+# Análisis del canal academatica {data-icon="fa-database"}
+##
+### Estadísticas básicas
+```{r}
+valueBox(nrow(videos), 
+         caption = "Total de videos publicados",
+         icon = 'fa-play-circle',
+         color = '#E1E289')
+```
+
+###
+```{r}
+valueBox(nrow(stats), 
+         caption = "Total de videos con Data",
+         icon = 'fa-database',
+         color = '#14591D')
+```
+
+
+##
+### Videos
+```{r}
+ordenByViews <- 
+  finalTable %>% arrange(desc(viewCount))
+nCount <- str_c("Video mas visto: ", ordenByViews$viewCount[1], " views")
+
+valueBox(nCount, 
+         caption = ordenByViews$title[1],
+         icon = 'fa-eye',
+         color = '#99AA38')
+```
+
+
+### 
+```{r Likes}
+ordenByViews <- 
+  finalTable %>% arrange(desc(likeCount))
+nCount <- str_c("Video con más likes: ", ordenByViews$likeCount[1], " views")
+
+valueBox(nCount, 
+         caption = ordenByViews$title[1],
+         icon = 'fa-thumbs-up')
+```
+
+
+
+
+
+# Videos vistos {data-icon="fa-play-circle"}
+##
+### Videos ordenados por más views
+```{r}
+ordenByViews <- 
+  finalTable %>% arrange(desc(viewCount)) %>% 
+  rename(Views = viewCount, Likes = likeCount, Dislikes = dislikeCount)
+
+ordenByViews %>%
+  DT::datatable()
+```
+
+###
+```{r}
+
+ordenByViews <- 
+  finalTable %>% arrange(desc(viewCount))
+names <- ordenByViews$title[1:5]
+variable <- ordenByViews$viewCount[1:5]
+fig <- plot_ly(
+  x = names,
+  y = variable,
+  name = "SF Zoo",
+  type = "bar"
+)
+
+fig
+```
+
+Videos vistos {.storyboard}
+=========================================
+
+### Likes by year
+
+```{r}
+x <- ggplot(finalTable, aes(x = yearPublish, y = likeCount, color = yearPublish)) + geom_jitter()
+x
+```
+
+### Pie 
+
+```{r}
+slices <- c(sum(finalTable$likeCount), sum(finalTable$dislikeCount))
+lbls <- c("Likes", "Dislikes")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="") # ad % to labels
+pie(slices,labels = lbls, main="Likes vs Dislikes")
+   
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

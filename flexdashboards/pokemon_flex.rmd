@@ -13,6 +13,7 @@ library(flexdashboard)
 library(readr)
 library(dplyr)
 library(DT)
+library(ggplot2)
 ```
 
 ```{r carga archivo}
