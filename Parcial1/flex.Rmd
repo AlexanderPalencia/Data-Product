@@ -20,9 +20,22 @@ library(ggplot2)
 ```
 
 ```{r carga archivo}
+
+my_db <- dbPool(
+  RMySQL::MySQL(), 
+  dbname = "test",
+  host = "172.18.0.2",
+  username = "test",
+  password = "test123"
+)
+
 stats <- read.csv('data/academatica_video_stats.csv')
 metadata <- read.csv('data/new_metadata.csv')
 videos <- read.csv('data/new_videos.csv')
+
+videos <- dbWriteTable(my_db, "video", videos, append = TRUE, row.names = FALSE)
+metadata <- dbWriteTable(my_db, "video_metadata", metadata, append = TRUE, row.names = FALSE)
+stats <- dbWriteTable(my_db, "video_stats", stats, append = TRUE, row.names = FALSE)
 
 metadata <- metadata %>%
   rename(id = video_id)
