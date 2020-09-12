@@ -2,8 +2,13 @@
 library(shiny)
 library(ggplot2)
 library(dplyr)
+library(foreach)
 
 shinyServer(function(input, output) {
+    
+    color <- rep("black",length(mtcars$wt))
+    mtcars$color <- color
+    mtcars$id <- c(1:32)
     
     output$grafica_base_r <- renderPlot({
         plot(mtcars$wt,mtcars$mpg,xlab="wt",ylab="Miles per Galon")
@@ -80,29 +85,81 @@ shinyServer(function(input, output) {
     
     ## EMPIEZA LA TAREA
     ## OBSERVADOR DE LA TABLA
-        
-    output$plot <- renderPlot({
-        color <- rep("black",length(mtcars$wt))
-        mtcars$color <- color
-        mtcars$id <- c(1:32)
-        plot(mtcars$wt, mtcars$mpg, xlab="Weight", ylab="Miles/(US) gallon") 
+    observe({
+        output$plot <- renderPlot({
+            plot(mtcars$wt, mtcars$mpg, xlab="Weight", ylab="Miles/(US) gallon") 
+        })
     })
-    
-    ## Outputs 
+    ## Outputs
     output$one <- renderPrint({
         brushedPoints(mtcars, input$plot_brush, xvar = "wt", yvar = "mpg")
-        
     })
     
     output$multiple <- renderPrint({
-        a = nearPoints(mtcars, input$plot_click, xvar = "wt", yvar = "mpg")
-        mtcars$color[mtcars$id == a$id] = 'red'
-        paste0(a)
-    })
-
-    output$one <- renderPrint({
-        brushedPoints(mtcars, input$plot_brush, xvar = "wt", yvar = "mpg")
-        
+        nearPoints(mtcars, input$plot_click, xvar = "wt", yvar = "mpg")
     })
     
+    observeEvent(input$plot_click, {
+        c <- nearPoints(mtcars, input$plot_click, xvar = "wt", yvar = "mpg")
+        mtcars$color[mtcars$id == c$id] = 'green'
+        
+        isolate({
+            output$plot <- renderPlot({
+                plot(mtcars$wt, mtcars$mpg, xlab="Weight", ylab="Miles/(US) gallon", col=mtcars$color) 
+            }) 
+        })
+    })
+    
+    
+    observeEvent(input$plot_dblclick, {
+        c <- nearPoints(mtcars, input$plot_dblclick, xvar = "wt", yvar = "mpg")
+        mtcars$color[mtcars$id == c$id] = 'red'
+        
+        isolate({
+            output$plot <- renderPlot({
+                plot(mtcars$wt, mtcars$mpg, xlab="Weight", ylab="Miles/(US) gallon", col=mtcars$color) 
+            }) 
+        })
+    })
+    
+    
+    observeEvent(input$plot_hover, {
+        c <- nearPoints(mtcars, input$plot_hover, xvar = "wt", yvar = "mpg")
+        mtcars$color[mtcars$id == c$id] = 'grey'
+        
+        isolate({
+            output$plot <- renderPlot({
+                plot(mtcars$wt, mtcars$mpg, xlab="Weight", ylab="Miles/(US) gallon", col=mtcars$color) 
+            }) 
+        })
+    })
+    
+    
+    observeEvent(input$plot_brush, {
+        c <- brushedPoints(mtcars, input$plot_brush, xvar = "wt", yvar = "mpg")
+        i <- 1
+        for(val in nrow(c)){
+            print('hola')
+            mtcars$color[mtcars$id == c[i,]$id] = 'blue'
+            i <- i + 1
+        }
+        
+        
+        isolate({
+            output$plot <- renderPlot({
+                plot(mtcars$wt, mtcars$mpg, xlab="Weight", ylab="Miles/(US) gallon", col=mtcars$color) 
+            }) 
+        })
+    })
 })
+
+
+
+
+
+
+
+
+
+
+
