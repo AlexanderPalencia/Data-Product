@@ -5,6 +5,7 @@ library(tidyverse)
 library(shinymaterial)
 library(shinythemes)
 library(DT)
+library(rsconnect)
 fluidPage(theme = shinytheme("cerulean"))
 
 # Define UI for dataset viewer app ----
