@@ -1,0 +1,12 @@
+name: ShinySteam
+title: ShinySteam
+username:
+account: alexanderpalencia
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3085362
+bundleId: 3776458
+url: https://alexanderpalencia.shinyapps.io/ShinySteam/
+when: 1603506350.23168
+asMultiple: FALSE
+asStatic: FALSE
